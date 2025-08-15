@@ -1,8 +1,11 @@
-import { db } from "@/lib/db";
+"use client";
 
-const HomePage = async () => {
-  const users = await db.user.findMany();
-  return <pre>{JSON.stringify(users, null, 2)}</pre>;
+import { authClient } from "@/lib/auth-client";
+
+const HomePage = () => {
+  const { data: session, isPending } = authClient.useSession();
+  if (isPending) return <div>Loading...</div>;
+  return <pre>{JSON.stringify(session, null, 2)}</pre>;
 };
 
 export default HomePage;
