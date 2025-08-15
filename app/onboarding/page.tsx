@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { OnboardForm } from "@/modules/onboarding/components/onboard-form";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { getUser } from "../dashboard/page";
+import { getUser } from "../(business)/dashboard/page";
 
 const OnboardingPage = async () => {
   const session = await auth.api.getSession({

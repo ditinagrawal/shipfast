@@ -1,5 +1,6 @@
+import { Logo } from "@/components/shared/logo";
 import { buttonVariants } from "@/components/ui/button";
-import { MoveLeftIcon, ZapIcon } from "lucide-react";
+import { MoveLeftIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -24,7 +25,7 @@ export default function AuthLayout({ children }: iAuthProps) {
           href={"/"}
           className="flex items-center gap-2 self-center font-medium"
         >
-          <ZapIcon className="size-6 fill-primary" />
+          <Logo className="size-5" />
           ShipFast
         </Link>
         {children}
