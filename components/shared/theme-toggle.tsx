@@ -1,44 +1,53 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useTheme } from "next-themes";
-import { useCallback } from "react";
+import { Moon, SunDim } from "lucide-react";
+import { useState, useRef } from "react";
+import { flushSync } from "react-dom";
+import { cn } from "@/lib/utils";
 
-export const ThemeToggle = () => {
-  const { setTheme, resolvedTheme } = useTheme();
+type props = {
+  className?: string;
+};
 
-  const toggleTheme = useCallback(() => {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
-  }, [resolvedTheme, setTheme]);
+export const ThemeToggle = ({ className }: props) => {
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const changeTheme = async () => {
+    if (!buttonRef.current) return;
 
+    await document.startViewTransition(() => {
+      flushSync(() => {
+        const dark = document.documentElement.classList.toggle("dark");
+        setIsDarkMode(dark);
+      });
+    }).ready;
+
+    const { top, left, width, height } =
+      buttonRef.current.getBoundingClientRect();
+    const y = top + height / 2;
+    const x = left + width / 2;
+
+    const right = window.innerWidth - left;
+    const bottom = window.innerHeight - top;
+    const maxRad = Math.hypot(Math.max(left, right), Math.max(top, bottom));
+
+    document.documentElement.animate(
+      {
+        clipPath: [
+          `circle(0px at ${x}px ${y}px)`,
+          `circle(${maxRad}px at ${x}px ${y}px)`,
+        ],
+      },
+      {
+        duration: 700,
+        easing: "ease-in-out",
+        pseudoElement: "::view-transition-new(root)",
+      }
+    );
+  };
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="group/toggle extend-touch-target size-8 cursor-pointer"
-      onClick={toggleTheme}
-      title="Toggle theme"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="size-4.5"
-      >
-        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-        <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-        <path d="M12 3l0 18" />
-        <path d="M12 9l4.65 -4.65" />
-        <path d="M12 14.3l7.37 -7.37" />
-        <path d="M12 19.6l8.85 -8.85" />
-      </svg>
-      <span className="sr-only">Toggle theme</span>
-    </Button>
+    <button ref={buttonRef} onClick={changeTheme} className={cn(className)}>
+      {isDarkMode ? <SunDim className="size-5" /> : <Moon className="size-5" />}
+    </button>
   );
 };

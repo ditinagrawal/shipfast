@@ -17,6 +17,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSignOut } from "@/hooks/use-signout";
 import { authClient } from "@/lib/auth-client";
 import {
   BellIcon,
@@ -25,10 +26,12 @@ import {
   MoreVerticalIcon,
   UserIcon,
 } from "lucide-react";
+import Link from "next/link";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { data: session, isPending } = authClient.useSession();
+  const { signOut } = useSignOut();
   if (isPending) return <Skeleton className="h-10 w-full" />;
   return (
     <SidebarMenu>
@@ -94,21 +97,27 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <UserIcon />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCardIcon />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <BellIcon />
-                Notifications
-              </DropdownMenuItem>
+              <Link href="/account">
+                <DropdownMenuItem>
+                  <UserIcon />
+                  Account
+                </DropdownMenuItem>
+              </Link>
+              <Link href="/billing">
+                <DropdownMenuItem>
+                  <CreditCardIcon />
+                  Billing
+                </DropdownMenuItem>
+              </Link>
+              <Link href="/notifications">
+                <DropdownMenuItem>
+                  <BellIcon />
+                  Notifications
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={signOut}>
               <LogOutIcon />
               Log out
             </DropdownMenuItem>
