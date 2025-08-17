@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
-export const fileUploadSchema = z.object({
+const fileUploadSchema = z.object({
   filename: z.string().min(1, { message: "Filename is required" }),
   contentType: z.string().min(1, { message: "Content type is required" }),
   size: z.number().min(1, { message: "Size is required" }),
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    const { filename, contentType, size, isImage } = validation.data;
+    const { filename, contentType, size } = validation.data;
     const uniqueKey = `${uuidv4()}-${filename}`;
 
     const command = new PutObjectCommand({

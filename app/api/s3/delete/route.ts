@@ -21,6 +21,7 @@ export async function DELETE(request: Request) {
       { status: 200 }
     );
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to delete file" },
       { status: 500 }
