@@ -1,6 +1,8 @@
 "use client";
 
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn, copyToClipboard } from "@/lib/utils";
 import {
   ChatContainerContent,
@@ -37,7 +39,6 @@ import {
   PaperclipIcon,
 } from "lucide-react";
 import { memo, useState } from "react";
-import { JuniorIcon } from "../icons";
 import { ScrollButton } from "./scroll-button";
 
 type MessageComponentProps = {
@@ -230,13 +231,19 @@ export const Chat = () => {
 
   return (
     <div className="flex h-screen flex-col overflow-hidden">
+      <header className="bg-background z-10 flex h-16 w-full shrink-0 items-center justify-between gap-2 border-b px-4">
+        <div className="flex items-center gap-2">
+          <SidebarTrigger />
+          <div className="text-foreground">ShipFast Chat</div>
+        </div>
+        <ThemeToggle />
+      </header>
       <ChatContainerRoot className="relative flex-1 space-y-0 overflow-y-auto">
         <ChatContainerContent className="space-y-12 px-4 py-12">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center">
-              <JuniorIcon className="size-8 text-muted-foreground" />
-              <p className="mt-4 text-center text-muted-foreground">
-                I&apos;m Junior. How can I help you today?
+              <p className="text-2xl font-semibold text-center text-muted-foreground absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                How can I help you today?
               </p>
             </div>
           )}

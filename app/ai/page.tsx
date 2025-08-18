@@ -1,15 +1,7 @@
-import { ThemeToggle } from "@/components/shared/theme-toggle";
-import { Chat } from "@/modules/ai/components/chat";
+import { ChatWrapper } from "@/modules/ai/components/chat-wrapper";
 
 const AIPage = () => {
-  return (
-    <div>
-      <div className="absolute right-4 top-4 z-10">
-        <ThemeToggle />
-      </div>
-      <Chat />
-    </div>
-  );
+  return <ChatWrapper />;
 };
 
 export default AIPage;
