@@ -6,7 +6,7 @@ import { resend } from "./resend";
 
 export const auth = betterAuth({
   database: prismaAdapter(db, {
-    provider: "mongodb",
+    provider: "postgresql",
   }),
   emailAndPassword: {
     enabled: true,
@@ -25,7 +25,7 @@ export const auth = betterAuth({
     emailOTP({
       async sendVerificationOTP({ email, otp }) {
         await resend.emails.send({
-          from: "ShipFast <onboarding@resend.dev>",
+          from: "ShipFast <hello@ditin.in>",
           to: [email],
           subject: "ShipFast - Verify your email",
           html: `<p>Your OTP is <strong>${otp}</strong></p>`,

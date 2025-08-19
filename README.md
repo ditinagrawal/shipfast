@@ -46,8 +46,8 @@ The NextJS boilerplate with all you need to build your SaaS or any other web app
 ### Backend & Database
 
 - **Next.js API Routes** - Serverless API endpoints
-- **Prisma** - Database ORM with MongoDB
-- **MongoDB** - NoSQL database
+- **Prisma** - Database ORM with PostgreSQL
+- **PostgreSQL** - Relational database
 - **Better Auth** - Authentication library
 
 ### Cloud & Services
