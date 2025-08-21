@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Quicksand } from "next/font/google";
 import "./globals.css";
+import { TrpcProvider } from "@/components/providers/trpc-provider";
 
 const quicksand = Quicksand({
   subsets: ["latin"],
@@ -23,15 +24,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${quicksand.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster richColors />
-        </ThemeProvider>
+        <TrpcProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster richColors />
+          </ThemeProvider>
+        </TrpcProvider>
       </body>
     </html>
   );

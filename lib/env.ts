@@ -22,8 +22,10 @@ export const env = createEnv({
   },
   client: {
     NEXT_PUBLIC_AWS_BUCKET_NAME: z.string().min(1),
+    NEXT_PUBLIC_TRPC_URL: z.string().url(),
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_AWS_BUCKET_NAME: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
+    NEXT_PUBLIC_TRPC_URL: process.env.NEXT_PUBLIC_TRPC_URL,
   },
 });

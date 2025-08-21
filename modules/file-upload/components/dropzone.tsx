@@ -12,6 +12,7 @@ import {
   RenderUploadedState,
   RenderUploadingState,
 } from "./render-state";
+import { trpc } from "@/lib/trpc-client";
 
 interface FileState {
   id: string | null;
@@ -31,6 +32,9 @@ interface iDropzoneProps {
 }
 
 export default function Dropzone({ value, onChange }: iDropzoneProps) {
+  const uploadFileMutation = trpc.s3.uploadFile.useMutation();
+  const deleteFileMutation = trpc.s3.deleteFile.useMutation();
+
   const fileUrl = constructUrl(value || "");
   const [fileState, setFileState] = useState<FileState>({
     id: null,
@@ -75,19 +79,14 @@ export default function Dropzone({ value, onChange }: iDropzoneProps) {
     }));
 
     try {
-      const response = await fetch("/api/s3/upload", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          filename: file.name,
-          contentType: file.type,
-          size: file.size,
-          isImage: true,
-        }),
+      const result = await uploadFileMutation.mutateAsync({
+        filename: file.name,
+        contentType: file.type,
+        size: file.size,
+        isImage: true,
       });
-      if (!response.ok) {
+
+      if (!result.presignedUrl || !result.key) {
         toast.error("Failed to get presigned URL");
         setFileState((prev) => ({
           ...prev,
@@ -97,7 +96,7 @@ export default function Dropzone({ value, onChange }: iDropzoneProps) {
         }));
         return;
       }
-      const { presignedUrl, key } = await response.json();
+
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.upload.onprogress = (event) => {
@@ -115,9 +114,9 @@ export default function Dropzone({ value, onChange }: iDropzoneProps) {
               ...prev,
               isUploading: false,
               progress: 100,
-              key,
+              key: result.key,
             }));
-            onChange?.(constructUrl(key));
+            onChange?.(constructUrl(result.key));
             toast.success("File uploaded successfully");
             resolve();
           } else {
@@ -127,7 +126,7 @@ export default function Dropzone({ value, onChange }: iDropzoneProps) {
         xhr.onerror = () => {
           reject(new Error("Failed to upload file"));
         };
-        xhr.open("PUT", presignedUrl);
+        xhr.open("PUT", result.presignedUrl);
         xhr.setRequestHeader("Content-Type", file.type);
         xhr.send(file);
       });
@@ -203,23 +202,11 @@ export default function Dropzone({ value, onChange }: iDropzoneProps) {
         ...prev,
         isDeleting: true,
       }));
-      const response = await fetch("/api/s3/delete", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ key: fileState.key }),
-      });
 
-      if (!response.ok) {
-        toast.error("Failed to delete file");
-        setFileState((prev) => ({
-          ...prev,
-          error: true,
-          isDeleting: false,
-        }));
-        return;
+      if (fileState.key) {
+        await deleteFileMutation.mutateAsync({ key: fileState.key });
       }
+
       if (fileState.objectUrl && !fileState.objectUrl.startsWith("http")) {
         URL.revokeObjectURL(fileState.objectUrl);
       }
