@@ -1,4 +1,5 @@
 import { S3 } from "@/lib/aws";
+import { env } from "@/lib/env";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { NextResponse } from "next/server";
@@ -26,7 +27,7 @@ export async function POST(request: Request) {
     const uniqueKey = `${uuidv4()}-${filename}`;
 
     const command = new PutObjectCommand({
-      Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
+      Bucket: env.NEXT_PUBLIC_AWS_BUCKET_NAME,
       ContentType: contentType,
       ContentLength: size,
       Key: uniqueKey,

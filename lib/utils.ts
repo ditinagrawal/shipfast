@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
+import { env } from "./env";
 import { Result } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
@@ -9,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function constructUrl(fileKey: string): string {
   if (!fileKey) return "";
-  return `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.t3.storageapi.dev/${fileKey}`;
+  return `https://${env.NEXT_PUBLIC_AWS_BUCKET_NAME}.t3.storageapi.dev/${fileKey}`;
 }
 
 export async function tryCatch<T, E = Error>(

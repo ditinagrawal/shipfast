@@ -1,4 +1,5 @@
 import { S3 } from "@/lib/aws";
+import { env } from "@/lib/env";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
 
@@ -11,7 +12,7 @@ export async function DELETE(request: Request) {
     }
 
     const command = new DeleteObjectCommand({
-      Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
+      Bucket: env.NEXT_PUBLIC_AWS_BUCKET_NAME,
       Key: key,
     });
 
