@@ -8,6 +8,7 @@ import { useState } from "react";
 
 import superjson from "superjson";
 
+import { env } from "@/env";
 import { makeQueryClient } from "@/trpc/query-client";
 import type { AppRouter } from "@/trpc/routers/_app";
 
@@ -26,7 +27,7 @@ function getQueryClient() {
 function getUrl() {
   const base = (() => {
     if (typeof window !== "undefined") return "";
-    return process.env.NEXT_PUBLIC_APP_URL as string;
+    return env.NEXT_PUBLIC_APP_URL;
   })();
   return `${base}/api/trpc`;
 }
